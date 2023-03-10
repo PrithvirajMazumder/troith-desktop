@@ -3,21 +3,17 @@
 	import Pagination from '$lib/components/pagination.svelte';
 	import Table from '$lib/components/table.svelte';
 	import usePagination from '$lib/hooks/usePagination';
-	import type { TableProp } from '$lib/interfaces/TableProp';
-	import type Unit from '$lib/interfaces/Unit';
 	import UnitService from '$lib/services/unit';
 	import Icon from '@iconify/svelte';
+	import type Unit from '$lib/interfaces/Unit';
 	import { onMount } from 'svelte';
+	import type { TableProp } from '$lib/interfaces/TableProp';
+	import ActionBar from '$lib/components/actionBar.svelte';
 
 	const unitService = new UnitService();
 	const [units, isUnitsLoading, , unitsCurrentPage, unitsLastPage, loadUnits] = usePagination<Unit>(
 		unitService.getUnits
 	);
-
-	onMount(async () => {
-		loadUnits();
-	});
-
 	let tableData: TableProp<Unit> = {
 		rows: [
 			{
@@ -44,6 +40,10 @@
 			}
 		]
 	};
+
+	onMount(async () => {
+		loadUnits(1);
+	});
 </script>
 
 <div class="flex sticky top-0 items-center py-2 px-2 w-full flex-wrap">
@@ -52,31 +52,23 @@
 	{#if $units.length}
 		<div class="ml-auto">
 			<Pagination
-			on:onPageChange={({ detail }) => {
-				loadUnits(detail);
-			}}
-			currentPage={$unitsCurrentPage}
-			lastPage={$unitsLastPage}
-		/>
+				on:onPageChange={({ detail }) => {
+					loadUnits(detail);
+				}}
+				currentPage={$unitsCurrentPage}
+				lastPage={$unitsLastPage}
+			/>
 		</div>
 	{/if}
 </div>
-{#if $units.length}
-	<div class="flex items-center pt-2 justify-start">
-		<button class="btn btn-sm mr-2">
-			<Icon class="text-xl mr-1" icon="mdi:plus" />
-			Create
-		</button>
-		<div class="form-control">
-			<div class="input-group w-full flex-1">
-				<input type="text" placeholder="Search…" class="input w-full input-bordered input-sm" />
-				<button class="btn btn-sm btn-square">
-					<Icon class="text-xl" icon="mdi:search" />
-				</button>
-			</div>
-		</div>
-	</div>
-{/if}
+<ActionBar
+	on:submit={({ detail }) => {
+		loadUnits($unitsCurrentPage, detail);
+	}}
+	on:reset={() => {
+		loadUnits($unitsCurrentPage);
+	}}
+/>
 <div class="-mb-1">
 	<Loader isLoading={$isUnitsLoading} />
 </div>

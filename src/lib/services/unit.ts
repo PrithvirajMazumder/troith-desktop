@@ -24,15 +24,27 @@ export default class UnitService {
 		return data;
 	};
 
-	public getUnits = async (page: number, limit = 10): Promise<[Unit[], number]> => {
+	public getUnits = async (
+		page: number,
+		limit: number,
+		searchKey?: string
+	): Promise<[Unit[], number]> => {
 		const { from, to } = getPagination(page, limit);
 		const { user: { id } } = await this.sessionService.getSession();
-		const { data, error, count } = await supabaseClient
+		let query = supabaseClient
 			.from(this.TABLE_NAME)
 			.select('*', { count: 'exact' })
 			.eq('userId', id)
 			.order('createdAt', { ascending: true })
 			.range(from, to);
+
+		if (searchKey?.length) {
+			query = query.textSearch('fullName', searchKey, { type: 'websearch' });
+		}
+
+		const { data, error, count } = await query;
+		console.log('search result: ', { data, error, count });
+		
 
 		if (error) {
 			throw error;

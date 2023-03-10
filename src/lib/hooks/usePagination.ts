@@ -1,7 +1,7 @@
 import { writable, type Writable } from 'svelte/store';
 
 const usePagination = <T>(
-	fetchData: (pageNo: number, limit: number) => Promise<[T[], number]>,
+	fetchData: (pageNo: number, limit: number, searchKey?: string) => Promise<[T[], number]>,
 	limit = 10
 ): [
 	Writable<T[]>,
@@ -17,12 +17,12 @@ const usePagination = <T>(
 	const currentPage = writable<number>(0);
 	const lastPage = writable<number>(0);
 
-	const loadData = async (pageNo = 1) => {
+	const loadData = async (pageNo = 1, searchKey?: string) => {
 		isLoading.set(true);
 		try {
-			const [fetchedData, last] = await fetchData(pageNo, limit);
+			const [fetchedData, last] = await fetchData(pageNo, limit, searchKey);
 			data.set(fetchedData);
-			currentPage.set(pageNo)
+			currentPage.set(pageNo);
 			lastPage.set(last);
 		} catch (error) {
 			hasError.set(error);
