@@ -1,19 +1,24 @@
 <script lang="ts">
+	import EditUnit from './editUnit.svelte';
+	import ActionBar from '$lib/components/actionBar.svelte';
 	import Loader from '$lib/components/loader.svelte';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Table from '$lib/components/table.svelte';
 	import usePagination from '$lib/hooks/usePagination';
-	import UnitService from '$lib/services/unit';
-	import Icon from '@iconify/svelte';
-	import type Unit from '$lib/interfaces/Unit';
-	import { onMount } from 'svelte';
 	import type { TableProp } from '$lib/interfaces/TableProp';
-	import ActionBar from '$lib/components/actionBar.svelte';
+	import type Unit from '$lib/interfaces/Unit';
+	import UnitService from '$lib/services/unit';
+	import { openModal } from '$lib/utils/modal';
+	import { onMount } from 'svelte';
+	import CreateUnit from './createUnit.svelte';
 
 	const unitService = new UnitService();
 	const [units, isUnitsLoading, , unitsCurrentPage, unitsLastPage, loadUnits] = usePagination<Unit>(
 		unitService.getUnits
 	);
+	let createModalId = 'create-unit';
+	let editModalId = 'edit-unit';
+	let unitToBeEdited: Unit;
 	let tableData: TableProp<Unit> = {
 		rows: [
 			{
@@ -32,11 +37,19 @@
 		actions: [
 			{
 				icon: 'material-symbols:edit',
-				onClick: (unit: Unit) => {}
+				onClick: (unit: Unit) => {
+					unitToBeEdited = unit;
+					openModal(editModalId);
+				}
 			},
 			{
 				icon: 'material-symbols:delete',
-				onClick: (unit: Unit) => {}
+				onClick: async (unit: Unit) => {
+					if (unit.id) {
+						await unitService.deleteUnit(unit.id);
+						loadUnits();
+					}
+				}
 			}
 		]
 	};
@@ -56,7 +69,7 @@
 					loadUnits(detail);
 				}}
 				currentPage={$unitsCurrentPage}
-				lastPage={$unitsLastPage}
+				lastPage={unitsLastPage}
 			/>
 		</div>
 	{/if}
@@ -68,6 +81,9 @@
 	on:reset={() => {
 		loadUnits($unitsCurrentPage);
 	}}
+	on:create={() => {
+		openModal(createModalId);
+	}}
 />
 <div class="-mb-1">
 	<Loader isLoading={$isUnitsLoading} />
@@ -75,3 +91,9 @@
 {#if $units.length}
 	<Table data={$units} tableProp={tableData} />
 {/if}
+<CreateUnit on:success={() => loadUnits($unitsCurrentPage)} modalId={createModalId} />
+<EditUnit
+	on:success={() => loadUnits($unitsCurrentPage)}
+	modalId={editModalId}
+	unit={unitToBeEdited}
+/>

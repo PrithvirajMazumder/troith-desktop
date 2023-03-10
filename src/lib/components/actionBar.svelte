@@ -7,15 +7,19 @@
 </script>
 
 <div class="flex items-center pt-2 justify-start">
-	<button
-		on:click|preventDefault={() => {
-			dispatch('create');
-		}}
-		class="btn btn-sm mr-2"
-	>
-		<Icon class="text-xl mr-1" icon="mdi:plus" />
-		Create
-	</button>
+	<div class="mr-2">
+		<slot>
+			<button
+				on:click|preventDefault={() => {
+					dispatch('create');
+				}}
+				class="btn btn-primary btn-sm mr-2"
+			>
+				<Icon class="text-xl" icon="mdi:plus" />
+				Create
+			</button>
+		</slot>
+	</div>
 	<form
 		class="form-control"
 		on:submit|preventDefault={(event) => {
@@ -36,11 +40,11 @@
 				placeholder="Search…"
 				class="input w-full input-bordered input-sm"
 			/>
-			<button type="submit" class="btn btn-sm btn-square">
-				<Icon class="text-xl" icon="mdi:search" />
+			<button type="submit" class="btn btn-sm btn-primary btn-square">
+				<Icon icon="mdi:search" />
 			</button>
 			{#if searchKey.length}
-				<button type="reset" class="btn btn-sm btn-square">
+				<button type="reset" class="btn btn-active btn-sm btn-square">
 					<Icon icon="mdi:clear" />
 				</button>
 			{/if}

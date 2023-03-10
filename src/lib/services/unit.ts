@@ -24,13 +24,38 @@ export default class UnitService {
 		return data;
 	};
 
+	public updateUnit = async (unit: Unit) => {
+		const { data, error } = await supabaseClient
+			.from(this.TABLE_NAME)
+			.update({ fullName: unit.fullName, shortName: unit.shortName })
+			.eq('id', unit.id);
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	};
+
+	public deleteUnit = async (unitId: string) => {
+		const { data, error } = await supabaseClient.from(this.TABLE_NAME).delete().eq('id', unitId);
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	};
+
 	public getUnits = async (
 		page: number,
 		limit: number,
 		searchKey?: string
 	): Promise<[Unit[], number]> => {
 		const { from, to } = getPagination(page, limit);
-		const { user: { id } } = await this.sessionService.getSession();
+		const {
+			user: { id }
+		} = await this.sessionService.getSession();
 		let query = supabaseClient
 			.from(this.TABLE_NAME)
 			.select('*', { count: 'exact' })
@@ -43,8 +68,6 @@ export default class UnitService {
 		}
 
 		const { data, error, count } = await query;
-		console.log('search result: ', { data, error, count });
-		
 
 		if (error) {
 			throw error;

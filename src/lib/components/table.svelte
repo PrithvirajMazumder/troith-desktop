@@ -28,7 +28,12 @@
 					{#if tableProp.actions}
 						<th>
 							{#each tableProp.actions as action}
-								<button class="btn btn-ghost btn-circle">
+								<button
+									on:click|preventDefault={() => {
+										action.onClick(tableData);
+									}}
+									class="btn btn-ghost btn-circle"
+								>
 									<Icon class="text-xl" icon={action.icon} />
 								</button>
 							{/each}

@@ -1,16 +1,20 @@
-<!-- The button to open modal -->
-<label for="my-modal-6" class="btn">open modal</label>
+<script lang="ts">
+	export let modalId: string;
+	export let header = 'Header';
+</script>
 
-<!-- Put this part before </body> tag -->
-<input type="checkbox" id="my-modal-6" class="modal-toggle" />
-<div class="modal modal-bottom sm:modal-middle">
-	<div class="modal-box">
-		<h3 class="font-bold text-lg">Congratulations random Internet user!</h3>
-		<p class="py-4">
-			You've been selected for a chance to get one year of subscription to use Wikipedia for free!
-		</p>
+<input type="checkbox" id={modalId} class="modal-toggle" />
+<label for={modalId} class="modal modal-bottom sm:modal-middle cursor-pointer">
+	<label class="modal-box relative" for="">
+		<label for={modalId} class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+		<h1 class="text-lg font-bold">{header}</h1>
+		<slot name="body">
+			<p class="py-4">Body</p>
+		</slot>
 		<div class="modal-action">
-			<label for="my-modal-6" class="btn">Yay!</label>
+			<slot name="action">
+				<label for={modalId} class="btn btn-primary"> Ok </label>
+			</slot>
 		</div>
-	</div>
-</div>
+	</label>
+</label>

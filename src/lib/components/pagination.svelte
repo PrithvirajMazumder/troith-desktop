@@ -1,16 +1,18 @@
 <script lang="ts">
 	import Icon from '@iconify/svelte';
 	import { createEventDispatcher } from 'svelte';
+	import type { Writable } from 'svelte/store';
 
 	export let currentPage: number;
-	export let lastPage: number;
+	export let lastPage: Writable<number>;
 	let pagesLimit = 5;
-	let pages: number[] = new Array(lastPage > pagesLimit ? pagesLimit : lastPage);
+	let pages: number[] = [];
 	const dispatch = createEventDispatcher();
 
 	$: {
+		pages = new Array($lastPage > pagesLimit ? pagesLimit : $lastPage);
 		let startingPage =
-			lastPage > pagesLimit && currentPage >= pagesLimit ? currentPage - (pagesLimit - 1) : 1;
+			$lastPage > pagesLimit && currentPage >= pagesLimit ? currentPage - (pagesLimit - 1) : 1;
 		for (let index = 0; index < pages.length; index++) {
 			pages[index] = startingPage++;
 		}
@@ -47,23 +49,23 @@
 			class="btn btn-sm">{page}</button
 		>
 	{/each}
-	{#if lastPage > pagesLimit && currentPage !== lastPage}
+	{#if $lastPage > pagesLimit && currentPage !== $lastPage}
 		<button disabled class="btn btn-sm">...</button>
 	{/if}
 	<button
 		on:click={() => {
 			updatePage(currentPage + 1);
 		}}
-		disabled={currentPage === lastPage}
+		disabled={currentPage === $lastPage}
 		class="btn btn-sm"
 	>
 		<Icon icon="mdi:chevron-right" />
 	</button>
 	<button
 		on:click={() => {
-			updatePage(lastPage);
+			updatePage($lastPage);
 		}}
-		disabled={currentPage === lastPage}
+		disabled={currentPage === $lastPage}
 		class="btn btn-sm"
 	>
 		<Icon icon="mdi:chevron-double-right" />
