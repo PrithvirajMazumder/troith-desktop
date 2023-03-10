@@ -1,26 +1,39 @@
 <script lang="ts">
 	import type { TableProp } from '$lib/interfaces/TableProp';
+	import Icon from '@iconify/svelte';
+
 	export let tableProp: TableProp<any>;
+	export let data: any[];
 </script>
 
 <div class="overflow-x-auto">
 	<table class="table table-zebra w-full">
-		<!-- head -->
 		<thead>
 			<tr>
-				<th />
 				{#each tableProp.rows as row}
 					<th>{row.rowName}</th>
 				{/each}
+				{#if tableProp.actions}
+					<th>Actions</th>
+				{/if}
 			</tr>
 		</thead>
 		<tbody>
-			{#each tableProp.data as tableData, index}
+			{#each data as tableData}
 				<tr>
-					<th style="z-index: 0;">{index + 1}</th>
-					{#each tableProp.rows as row}
-						<th>{tableData[row.key]}</th>
+					{#each tableProp.rows as row, index}
+						<th class:z-0={index === 0}>{tableData[row.key]}</th>
 					{/each}
+
+					{#if tableProp.actions}
+						<th>
+							{#each tableProp.actions as action}
+								<button class="btn btn-ghost btn-circle">
+									<Icon class="text-xl" icon={action.icon} />
+								</button>
+							{/each}
+						</th>
+					{/if}
 				</tr>
 			{/each}
 		</tbody>

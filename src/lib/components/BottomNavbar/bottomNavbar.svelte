@@ -3,7 +3,7 @@
 	import Icon from '@iconify/svelte';
 </script>
 
-<div class="btm-nav lg:hidden">
+<div class="btm-nav lg:hidden z-30">
 	<a
 		href="/app/invoices"
 		class:active={$page.url.pathname === '/app/invoices'}

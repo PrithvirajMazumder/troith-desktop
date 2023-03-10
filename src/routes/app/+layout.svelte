@@ -9,7 +9,7 @@
 
 <Drawer>
 	<Navbar userName={data.session?.user.email ?? ''} slot="navbar" />
-	<div class="p-4">
+	<div class="p-4 relative">
 		<slot />
 	</div>
 	<BottomNavbar />

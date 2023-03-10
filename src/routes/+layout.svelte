@@ -7,12 +7,9 @@
 	import '../app.css';
 
 	onMount(() => {
-		console.log('app is triggering');
-
 		const {
 			data: { subscription }
 		} = supabaseClient.auth.onAuthStateChange(() => {
-			console.log('Auth state change detected');
 			invalidateAll();
 		});
 

@@ -12,7 +12,7 @@ export const load: PageServerLoad = async (event) => {
 
 	}
 	
-	const { units, error } = await unitService.getUnits(session.user.id);
+	const { units, error } = await unitService.getUnitsQuery(session.user.id);
 
 	if (error) {
 		return fail(500)
