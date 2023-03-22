@@ -22,7 +22,9 @@
 			{#each data as tableData}
 				<tr>
 					{#each tableProp.rows as row, index}
-						<th class:z-0={index === 0}>{tableData[row.key]}</th>
+						<th class:z-0={index === 0}>
+							{typeof row.key === 'string' ? tableData[row.key] : row.key(tableData)}
+						</th>
 					{/each}
 
 					{#if tableProp.actions}

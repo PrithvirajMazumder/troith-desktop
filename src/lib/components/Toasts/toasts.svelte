@@ -15,7 +15,7 @@
 </script>
 
 <div class="toast toast-bottom toast-end">
-	{#each toasts as toast, index}
+	{#each toasts as toast}
 		<Toast
 			{toast}
 			on:clear={() => {

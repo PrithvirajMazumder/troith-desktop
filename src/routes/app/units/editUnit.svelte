@@ -19,13 +19,15 @@
 			event.preventDefault();
 			isUpdating = true;
 			try {
-				const fullName = event.target?.fullName.value;
-				const shortName = event.target?.shortName.value;
+				const fullName = event.currentTarget?.fullName.value;
+				const shortName = event.currentTarget?.shortName.value;
 
 				await unitService.updateUnit({ ...unit, fullName, shortName });
 				closeModal(modalId);
 				dispatch('success');
 			} catch (error) {
+				console.log('----error: ', error);
+				
 				//TOOD: add toaster
 			} finally {
 				isUpdating = false;

@@ -9,21 +9,24 @@
 	const unitService = new UnitService();
 	const dispatch = createEventDispatcher();
 	let isCreating: boolean = false;
+	let form: HTMLFormElement;
 </script>
 
 <Modal {modalId} header="Create Unit">
 	<form
+		bind:this={form}
 		on:submit={async (event) => {
 			event.preventDefault();
 			isCreating = true;
 			try {
-				const fullName = event.target?.fullName.value;
-				const shortName = event.target?.shortName.value;
+				const fullName = event.currentTarget?.fullName.value;
+				const shortName = event.currentTarget?.shortName.value;
 				await unitService.createUnit(fullName, shortName);
-                event.target.reset();
+				form.reset();
 				closeModal(modalId);
 				dispatch('success');
 			} catch (error) {
+				console.log('----error: ', error);
 				//TOOD: add toaster
 			} finally {
 				isCreating = false;

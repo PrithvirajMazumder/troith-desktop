@@ -12,7 +12,7 @@
 	});
 </script>
 
-<div class={`alert alert-${toast.type}`}>
+<div class={`alert z-50 alert-${toast.type}`}>
 	<div>
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
