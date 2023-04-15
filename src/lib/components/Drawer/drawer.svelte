@@ -57,7 +57,7 @@
 					<li />
 				{/if}
 				<li>
-					<a href="/app/invoices" class:active={$page.url.pathname === '/app/invoices'}>
+					<a href="/app/invoices" class:active={$page.url.pathname.includes('/app/invoices')}>
 						<Icon class="text-2xl" icon="charm:notes-tick" />
 						{#if !isCollapsed}
 							<span>Invoice</span>

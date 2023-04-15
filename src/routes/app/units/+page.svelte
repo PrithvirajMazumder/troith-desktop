@@ -12,6 +12,7 @@
 	import { onMount } from 'svelte';
 	import CreateUnit from './createUnit.svelte';
 
+	export const prerender = true;
 	const unitService = new UnitService();
 	const [units, isUnitsLoading, , unitsCurrentPage, unitsLastPage, loadUnits] = usePagination<Unit>(
 		unitService.getUnits
